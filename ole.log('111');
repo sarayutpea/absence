@@ -1,0 +1,197 @@
+[1mdiff --git a/src/components/layouts/Header.vue b/src/components/layouts/Header.vue[m
+[1mdeleted file mode 100644[m
+[1mindex 3b098b2..0000000[m
+[1m--- a/src/components/layouts/Header.vue[m
+[1m+++ /dev/null[m
+[36m@@ -1,14 +0,0 @@[m
+[31m-<template>[m
+[31m-    <div class="header">[m
+[31m-[m
+[31m-    </div>[m
+[31m-</template>[m
+[31m-[m
+[31m-<script>[m
+[31m-    export default{[m
+[31m-        name : "Header"[m
+[31m-    }[m
+[31m-</script>[m
+[31m-<style scope>[m
+[31m-[m
+[31m-</style>[m
+[1mdiff --git a/src/components/layouts/Master.vue b/src/components/layouts/Master.vue[m
+[1mindex c65cf71..c7f8633 100644[m
+[1m--- a/src/components/layouts/Master.vue[m
+[1m+++ b/src/components/layouts/Master.vue[m
+[36m@@ -1,60 +1,56 @@[m
+ <template>[m
+     <div class="master">[m
+         <v-app id="inspire">[m
+[31m-        <v-navigation-drawer :clipped="$vuetify.breakpoint.lgAndUp" v-model="drawer" fixed app>[m
+         <!-- menu position -->[m
+[31m-        <v-list dense>[m
+[31m-            <template v-for="item in items">[m
+[31m-            <v-layout v-if="item.heading" :key="item.heading" row align-center>[m
+[31m-                <v-flex xs6>[m
+[31m-                    <v-subheader v-if="item.heading">[m
+[31m-                        {{ item.heading }}[m
+[31m-                    </v-subheader>[m
+[31m-                </v-flex>[m
+[31m-                <v-flex xs6 class="text-xs-center">[m
+[31m-                    <a href="#!" class="body-2 black--text">EDIT</a>[m
+[31m-                </v-flex>[m
+[31m-            </v-layout>[m
+[31m-            <v-list-group v-else-if="item.children" v-model="item.model" :key="item.text" :prepend-icon="item.model ? item.icon : item['icon-alt']" append-icon="">[m
+[31m-                <v-list-tile slot="activator">[m
+[31m-                    <v-list-tile-content>[m
+[31m-                        <v-list-tile-title>[m
+[31m-                        {{ item.text }}[m
+[31m-                        </v-list-tile-title>[m
+[31m-                    </v-list-tile-content>[m
+[31m-                </v-list-tile>[m
+[31m-                <v-list-tile v-for="(child, i) in item.children" :key="i" @click="" >[m
+[31m-                    <v-list-tile-action v-if="child.icon">[m
+[31m-                        <v-icon>{{ child.icon }}</v-icon>[m
+[31m-                    </v-list-tile-action>[m
+[31m-                    <v-list-tile-content>[m
+[32m+[m[32m        <v-navigation-drawer :clipped="$vuetify.breakpoint.lgAndUp" v-model="drawer" fixed app>[m
+[32m+[m[32m            <v-list dense>[m
+[32m+[m[32m                <template v-for="item in items">[m
+[32m+[m[32m                    <v-list-group v-if="item.children" v-model="item.model" :key="item.text" :prepend-icon="item.model ? item.icon : item['icon-alt']" append-icon="">[m
+[32m+[m[32m                        <v-list-tile slot="activator">[m
+[32m+[m[32m                            <v-list-tile-content>[m
+[32m+[m[32m                                <v-list-tile-title>[m
+[32m+[m[32m                                    {{ item.text }}[m
+[32m+[m[32m                                </v-list-tile-title>[m
+[32m+[m[32m                            </v-list-tile-content>[m
+[32m+[m[32m                        </v-list-tile>[m
+[32m+[m[32m                        <v-list-tile v-for="(child, i) in item.children" :key="i" @click="" >[m
+[32m+[m[32m                            <v-list-tile-action v-if="child.icon">[m
+[32m+[m[32m                                <v-icon>{{ child.icon }}</v-icon>[m
+[32m+[m[32m                            </v-list-tile-action>[m
+[32m+[m[32m                            <v-list-tile-content>[m
+[32m+[m[32m                                <v-list-tile-title>[m
+[32m+[m[32m                                {{ child.text }}[m
+[32m+[m[32m                                </v-list-tile-title>[m
+[32m+[m[32m                            </v-list-tile-content>[m
+[32m+[m[32m                        </v-list-tile>[m
+[32m+[m[32m                    </v-list-group>[m
+[32m+[m[32m                    <v-list-tile v-else :key="item.text" @click="">[m
+[32m+[m[32m                        <v-list-tile-action>[m
+[32m+[m[32m                        <v-icon>{{ item.icon }}</v-icon>[m
+[32m+[m[32m                        </v-list-tile-action>[m
+[32m+[m[32m                        <v-list-tile-content>[m
+                         <v-list-tile-title>[m
+[31m-                        {{ child.text }}[m
+[32m+[m[32m                            {{ item.text }}[m
+                         </v-list-tile-title>[m
+[31m-                    </v-list-tile-content>[m
+[31m-                </v-list-tile>[m
+[31m-            </v-list-group>[m
+[31m-            <v-list-tile v-else :key="item.text" @click="">[m
+[31m-                <v-list-tile-action>[m
+[31m-                <v-icon>{{ item.icon }}</v-icon>[m
+[31m-                </v-list-tile-action>[m
+[31m-                <v-list-tile-content>[m
+[31m-                <v-list-tile-title>[m
+[31m-                    {{ item.text }}[m
+[31m-                </v-list-tile-title>[m
+[31m-                </v-list-tile-content>[m
+[31m-            </v-list-tile>[m
+[31m-            </template>[m
+[31m-        </v-list>[m
+[31m-        <!-- end menu position -->[m
+[32m+[m[32m                        </v-list-tile-content>[m
+[32m+[m[32m                    </v-list-tile>[m
+[32m+[m[32m                </template>[m
+[32m+[m[32m            </v-list>[m
+         </v-navigation-drawer>[m
+[32m+[m[32m        <!-- end menu position -->[m
+[32m+[m
+         <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" color="blue darken-3" dark app fixed>[m
+             <v-toolbar-title style="width: 300px" class="ml-0 pl-3">[m
+                 <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>[m
+                 <span class="hidden-sm-and-down">Absence</span>[m
+             </v-toolbar-title>[m
+[31m-            Title Position[m
+[31m-            <v-spacer></v-spacer>[m
+[32m+[m[32m                <v-btn icon >[m
+[32m+[m[32m                    <v-icon>keyboard_arrow_left</v-icon>[m
+[32m+[m[32m                </v-btn>[m
+[32m+[m[32m                <breadcrumbs />[m
+[32m+[m[32m            <v-spacer>[m
+[32m+[m
+[32m+[m[32m            </v-spacer>[m
+                     [m
+             <v-btn icon large>[m
+                 <v-avatar size="32px" tile>[m
+[36m@@ -65,6 +61,8 @@[m
+         <v-content>[m
+             <v-container fluid fill-width>[m
+                 Content position[m
+[32m+[m
+[32m+[m[32m                {{ breadcrumbs }}[m
+                 <Login />[m
+             </v-container>[m
+         </v-content>[m
+[36m@@ -75,18 +73,20 @@[m
+ </template>[m
+ <script>[m
+ import Login from "../../components/auth/Login.vue";[m
+[32m+[m[32mimport Breadcrumbs from '../../components/layouts/Breadcrumbs.vue';[m
+ [m
+ export default {[m
+   name: "Master",[m
+   components: {[m
+[31m-    Login[m
+[32m+[m[32m    Login,[m
+[32m+[m[32m    Breadcrumbs[m
+   },[m
+[31m-  data: () => ({[m
+[32m+[m[32m  data: ()=>({[m
+     dialog: false,[m
+     drawer: null,[m
+     items: [[m
+[31m-      { icon: "computer", text: "Dashboard" },[m
+[31m-      { icon: "history", text: "Salary" },[m
+[32m+[m[32m      { icon: "computer", text: "Dashboard", link: "#" },[m
+[32m+[m[32m      { icon: "history", text: "Salary", link: "#" },[m
+     //   { icon: "content_copy", text: "Duplicates" },[m
+     //   {[m
+     //     icon: "keyboard_arrow_up",[m
+[36m@@ -95,25 +95,22 @@[m [mexport default {[m
+     //     model: true,[m
+     //     children: [{ icon: "add", text: "Create label" }][m
+     //   },[m
+[31m-    //   {[m
+[31m-    //     icon: "keyboard_arrow_up",[m
+[31m-    //     "icon-alt": "keyboard_arrow_down",[m
+[31m-    //     text: "More",[m
+[31m-    //     model: false,[m
+[31m-    //     children: [[m
+[31m-    //       { text: "Import" },[m
+[31m-    //       { text: "Export" },[m
+[31m-    //       { text: "Print" },[m
+[31m-    //       { text: "Undo changes" },[m
+[31m-    //       { text: "Other contacts" }[m
+[31m-    //     ][m
+[31m-    //   },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        icon: "keyboard_arrow_up",[m[41m [m
+[32m+[m[32m        'icon-alt' : "keyboard_arrow_down",[m
+[32m+[m[32m        text: "More",[m
+[32m+[m[32m        model: false,[m
+[32m+[m[32m        children: [[m
+[32m+[m[32m          { text: "Logout" },[m
+[32m+[m[32m        ][m
+[32m+[m[32m      }[m
+     //   { icon: "settings", text: "Settings" },[m
+     //   { icon: "chat_bubble", text: "Send feedback" },[m
+     //   { icon: "help", text: "Help" },[m
+     //   { icon: "phonelink", text: "App downloads" },[m
+     //   { icon: "keyboard", text: "Go to the old version" }[m
+[31m-    ][m
+[32m+[m[32m    ],[m
+[32m+[m[32m    breadcrumbs: Breadcrumbs.items[m
+   }),[m
+   props: {[m
+     source: String[m
