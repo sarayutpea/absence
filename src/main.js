@@ -3,6 +3,7 @@ import Vue from 'vue'
 import './plugins/vuetify'
 import App from './App.vue'
 import VueRouter from 'vue-router'
+import VueResource from 'vue-resource'
 
 
 import Dashboard from './components/DashBoard'
@@ -12,6 +13,7 @@ import Calculator from './components/programs/Calculator'
 
 
 Vue.use(VueRouter)
+Vue.use(VueResource)
 Vue.config.productionTip = false
 
 const routes = [
