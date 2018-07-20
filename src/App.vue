@@ -108,12 +108,16 @@ export default {
     ],
     breadcrumbs: Breadcrumbs.items
   }),
-  props: {
+  props:{
     source: String,
+    
+  },
+  methods:{
     
   }
 }
 </script>
+
 <style scope>
 a{
   text-decoration: none;
