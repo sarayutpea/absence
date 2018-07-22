@@ -23,24 +23,14 @@
             <v-card tile>
                 <v-toolbar card dark color="primary">
                     <v-btn icon dark @click.native="closeDialog()">
-                    <v-icon>close</v-icon>
+                        <v-icon>close</v-icon>
                     </v-btn>
                     <v-toolbar-title>{{ dialog.title }} - รายเดือน</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-toolbar-items>
-                    <v-btn dark flat @click.native="closeDialog()">Save</v-btn>
-                    </v-toolbar-items>
-                    <v-menu bottom right offset-y>
-                    <v-btn slot="activator" dark icon>
-                        <v-icon>more_vert</v-icon>
-                    </v-btn>
-                    <v-list>
-                        <v-list-tile>
-                            <v-list-tile-title v-for="(menu, i) in dialog.menus" :key="i" @click="log(menu.link)">
-                                {{menu.title}}
-                            </v-list-tile-title>
-                        </v-list-tile>
-                    </v-list>
+                        <v-btn dark flat @click.native="addTransection()">+ ADD</v-btn>
+                    </v-toolbar-items>  
+                    
                     </v-menu>
                 </v-toolbar>
                 <v-card-text>
@@ -74,15 +64,7 @@
                         <v-icon>close</v-icon>
                         </v-btn>
                         <v-toolbar-title>{{ worktimeDialog.title }} - รายวัน</v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <v-toolbar-items>
-                            <v-btn dark flat @click.native="closeWorktimeDialog()">Save</v-btn>
-                        </v-toolbar-items>
-                    <v-menu bottom right offset-y>
-                        <v-btn slot="activator" dark icon>
-                            <v-icon>more_vert</v-icon>
-                        </v-btn>
-                    </v-menu>
+                    
                 </v-toolbar>
                 <v-card-text>
                     <v-data-table :headers="worktimeDialog.dataTable.headers" :items="worktimeDialog.dataTable.days">
@@ -100,11 +82,19 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+
+        <v-dialog  v-model="addDialog.status" transition="dialog-bottom-transition">
+            <AddTransection  />
+        </v-dialog>
     </div>
 </template>
 <script>
+import AddTransection from './AddTransection.vue';
     export default{
         name: "Employee",
+        components:{
+            AddTransection
+        },
         data: ()=>({
                 dialog: {
                     status: false,
@@ -169,6 +159,10 @@
 
                     }
                 },
+                addDialog:{
+                    status: false
+
+                },
                 headers: [
                     { text: 'Name', value: 'name' },
                     { text: 'Salary', value: 'salary' },
@@ -206,6 +200,11 @@
                 this.dialog.status = false;
                 this.dialog.dataTable.months = [];
             },
+            addTransection(){
+                this.addDialog.status = true;
+
+                console.log("Add transection");
+            },
             log(data){
                 console.log(data);
             }
@@ -223,4 +222,3 @@
 <style scope>
 
 </style>
-
