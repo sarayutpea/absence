@@ -82,7 +82,6 @@ export default {
     items: [
       { icon: "computer", text: "Dashboard", link: "/dashboard" },
       { icon: "account_circle", text: "Employees", link: "/employees" },
-      { icon: "add_circle_outline", text: "Calculate", link: "/calculator" },
     //   { icon: "content_copy", text: "Duplicates" },
     //   {
     //     icon: "keyboard_arrow_up",

@@ -84,12 +84,12 @@
         </v-dialog>
 
         <v-dialog  v-model="addDialog.status" transition="dialog-bottom-transition">
-            <AddTransection  />
+            <AddTransection @saveTransection="updateDialog($event)" />
         </v-dialog>
     </div>
 </template>
 <script>
-import AddTransection from './AddTransection.vue';
+import AddTransection from './AddTransection';
     export default{
         name: "Employee",
         components:{
@@ -191,7 +191,6 @@ import AddTransection from './AddTransection.vue';
                     this.worktimeDialog.title = name;
                 });
                 this.worktimeDialog.status = true;
-                console.log(link);
             },
             closeWorktimeDialog(){
                 this.worktimeDialog.status = false;
@@ -200,10 +199,11 @@ import AddTransection from './AddTransection.vue';
                 this.dialog.status = false;
                 this.dialog.dataTable.months = [];
             },
+            updateDialog($event){
+                this.log($event);
+            },
             addTransection(){
                 this.addDialog.status = true;
-
-                console.log("Add transection");
             },
             log(data){
                 console.log(data);
