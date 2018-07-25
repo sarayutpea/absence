@@ -83,8 +83,8 @@
             </v-card>
         </v-dialog>
 
-        <v-dialog  v-model="addDialog.status" transition="dialog-bottom-transition">
-            <AddTransection @saveTransection="updateDialog($event)" />
+        <v-dialog v-model="addDialog.status" transition="dialog-bottom-transition">
+            <AddTransection :link="worktimeDialog.link" @saveTransection="updateDialog($event)" />
         </v-dialog>
     </div>
 </template>
@@ -157,7 +157,8 @@ import AddTransection from './AddTransection';
                             }
                         ]
 
-                    }
+                    },
+                    link:""
                 },
                 addDialog:{
                     status: false
@@ -178,11 +179,12 @@ import AddTransection from './AddTransection';
             }),
         methods:{
             showSalary(link, name){
-                this.dialog.status = true;
+                this.worktimeDialog.link = link;
                 this.$http.get(link).then((data)=>{
                     this.dialog.dataTable.months = JSON.parse(data.bodyText).data;
                     this.dialog.title = name;
                 });
+                this.dialog.status = true;
             },
             showWorktimes(link, name){
                 this.$http.get(link).then((data)=>{
@@ -191,6 +193,8 @@ import AddTransection from './AddTransection';
                     this.worktimeDialog.title = name;
                 });
                 this.worktimeDialog.status = true;
+
+                
             },
             closeWorktimeDialog(){
                 this.worktimeDialog.status = false;
@@ -200,13 +204,10 @@ import AddTransection from './AddTransection';
                 this.dialog.dataTable.months = [];
             },
             updateDialog($event){
-                this.log($event);
+                console.log($event);
             },
             addTransection(){
                 this.addDialog.status = true;
-            },
-            log(data){
-                console.log(data);
             }
         },
         mounted(){

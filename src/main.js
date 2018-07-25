@@ -4,6 +4,7 @@ import './plugins/vuetify'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
+// import { createSimpleTransition } from 'vuetify/es5/util/helpers'
 
 
 import Dashboard from './components/DashBoard'
@@ -15,13 +16,17 @@ Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.config.productionTip = false
 
+// const myTransition = createSimpleTransition('v-fade-transition')
+// Vue.component(Dashboard, myTransition)
+
 const routes = [
   { path: '/dashboard', component: Dashboard },
   { path: '/login', component: Login },
-  { path: '/employees', component: Employee },
+  { path: '/employees', component: Employee }
 ]
 const router = new VueRouter({
-  routes // short for `routes: routes`
+  routes,
+  mode: 'history' // short for `routes: routes`
 })
 
 new Vue({

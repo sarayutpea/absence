@@ -58,7 +58,10 @@
         <v-content>
             <v-container fluid fill-width>
                 <!-- content -->
-                <router-view></router-view>
+                <transition name="router-animation">
+                    <router-view></router-view>
+                </transition>
+                
             </v-container>
         </v-content>
     </v-app>
@@ -120,5 +123,40 @@ export default {
 <style scope>
 a{
   text-decoration: none;
+}
+.router-animation-enter-active{
+    animation: fade-in;
+    animation-duration: 0.5s;
+}
+.router-animation-leave-active{
+    animation: fade-out;
+    animation-duration: 0.2s;
+}
+@keyframes fade-in{
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    50% {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+@keyframes fade-out{
+    0% {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
 }
 </style>

@@ -25,8 +25,11 @@
 <script>
 export default {
     name:"AddTransection",
+    props:{
+        link:String
+    },
     data:()=>({
-        monthSelection: { value: 1 },
+        monthSelection: 0,
         items:[
             { value: 1, text: "มกราคม" },
             { value: 2, text: "กุมพาพันธ์" },
@@ -62,20 +65,28 @@ export default {
         this.$on('input', ($event)=>{
             this.file.label = $event;
         });
+
         this.$on('formData', ($event)=>{
-            this.file.value = $event;
-            this.file.value.append('month', this.monthSelection.value);
-            this.form = this.file.value;
-            // console.log(this.file.value.get('month'));
+            if(this.form.get('file') !== null){
+                this.form.set('file', $event.get('file'));
+            }else{
+                this.form.append('file', $event.get('file'));
+            }
         });
     },
     methods:{
         save(){
-            // form = new FormData();
-            // form.append('')
-
-            this.$emit('saveTransection', 'emit - saveTransection');
-            console.log(this.form.get('file'));
+            if(this.form.get('month') !== null){
+                this.form.set('month', this.monthSelection);
+            }else{
+                this.form.append('month', this.monthSelection);
+            }
+            // console.log(this.form.get('month'));
+            // console.log(this.form.get('file'));
+            this.$http.post(this.link, this.form).then((data)=>{
+                console.log(data);
+                // this.$emit('saveTransection', data);
+            });
         },
         getFormData(files){
             const data = new FormData();
@@ -108,7 +119,7 @@ export default {
     },
     created(){
         let month = new Date();
-        this.monthSelection.value = month.getMonth();
+        this.monthSelection = month.getMonth();
     }
 }
 </script>
