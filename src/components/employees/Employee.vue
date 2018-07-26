@@ -213,7 +213,7 @@ import AddTransection from './AddTransection';
             }
         },
         mounted(){
-            this.$http.get('http://adsence.metold.com/api/employees').then((data)=>{
+            this.$http.get('https://adsence.metold.com/api/employees').then((data)=>{
                 let d = JSON.parse(data.bodyText);
                 this.employees = d.data;
             });
