@@ -53,7 +53,8 @@ export default {
             multiple: false,
             filename: ""
         },
-        form: new FormData()
+        form: new FormData(),
+        auth: ""
     }),
     watch:{
         value(v){
@@ -81,12 +82,12 @@ export default {
             }else{
                 this.form.append('month', this.monthSelection);
             }
-            // console.log(this.form.get('month'));
-            // console.log(this.form.get('file'));
             this.$http.post(this.link, this.form).then((data)=>{
-                console.log(data);
-                // this.$emit('saveTransection', data);
-            });
+                // console.log(data);
+                this.$emit('saveTransection', data.body.data.links);
+            }, response => {
+                console.log(response)
+            })
         },
         getFormData(files){
             const data = new FormData();
@@ -120,6 +121,7 @@ export default {
     created(){
         let month = new Date();
         this.monthSelection = month.getMonth();
+        this.auth = localStorage.getItem('auth');
     }
 }
 </script>

@@ -108,13 +108,13 @@ import AddTransection from './AddTransection';
                     dataTable:{
                         
                         headers:[
-                            { text: "Month", value: "date" },
-                            { text: "Total late", value: "all_late" },
-                            { text: "Total absence", value: "all_absence" },
-                            { text: "Total lost", value: "all_lost_money" },
-                            { text: "Total get", value: "all_extend_money" },
-                            { text: "Net", value: "net" },
-                            { text: "Control", value: "control" , sortable: false},
+                            { text: "เดือน/ปี", value: "date" },
+                            { text: "มาสาย", value: "all_late" },
+                            { text: "ขาดงาน", value: "all_absence" },
+                            { text: "หักเงิน", value: "all_lost_money" },
+                            { text: "เงินOT", value: "all_extend_money" },
+                            { text: "เงินได้สุทธิ", value: "net" },
+                            { text: "", value: "control" , sortable: false},
                         ],
                         months:[
                             { 
@@ -165,9 +165,9 @@ import AddTransection from './AddTransection';
 
                 },
                 headers: [
-                    { text: 'Name', value: 'name' },
-                    { text: 'Salary', value: 'salary' },
-                    { text: 'Control', value: 'control' , sortable: false}
+                    { text: 'ชื่อ', value: 'name' },
+                    { text: 'ฐานเงินเดือน', value: 'salary' },
+                    { text: '', value: 'control' , sortable: false}
                 ],
                 employees: [
                     {
@@ -204,14 +204,16 @@ import AddTransection from './AddTransection';
                 this.dialog.dataTable.months = [];
             },
             updateDialog($event){
-                console.log($event);
+                // console.log($event);
+                this.showSalary($event, this.dialog.title);
+                this.addDialog.status = false;
             },
             addTransection(){
                 this.addDialog.status = true;
             }
         },
         mounted(){
-            this.$http.get('http://localhost:8000/api/employees').then((data)=>{
+            this.$http.get('http://adsence.metold.com/api/employees').then((data)=>{
                 let d = JSON.parse(data.bodyText);
                 this.employees = d.data;
             });
