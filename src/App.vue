@@ -79,7 +79,7 @@ export default {
     Breadcrumbs,
   },
   data: ()=>({
-    title: "Dashboard",
+    title: "",
     dialog: false,
     drawer: null,
     items: [
@@ -112,13 +112,18 @@ export default {
   }),
   props:{
     source: String,
-    
   },
   methods:{
     
   },
   mounted(){
+      
       localStorage.setItem('auth','Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijc3MGQyNjhmMTFlNjBlNzAxYTY5Mzg2MjFlMDJiYzllYTllNmY1ODg5MGMzOWFhNDgwODZiNzVkNmExZTkxNzlhMjY0OTFjMTg1OTUxMGU4In0.eyJhdWQiOiIyIiwianRpIjoiNzcwZDI2OGYxMWU2MGU3MDFhNjkzODYyMWUwMmJjOWVhOWU2ZjU4ODkwYzM5YWE0ODA4NmI3NWQ2YTFlOTE3OWEyNjQ5MWMxODU5NTEwZTgiLCJpYXQiOjE1MzE5ODMxOTIsIm5iZiI6MTUzMTk4MzE5MiwiZXhwIjoxNTYzNTE5MTkyLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.KX09-bfrKMTlcoybDpQXJa-u37-QLUBYuarPZxjapLf_sbx7PmL418seRlcyNmrgKLbqzjpsQV80EDfZzQBupwpW3fbMVGEexmU7PSha6kWOYFPCNlPEBhH3wWCGYDsbVRXFtOPb5inKTj05LtyQ0CmJtQZQs9dXyQcelsGlaJuuuBjtN69Mf_NESN2Ell4Z7FLHfxcnqMqM3oEqRtCDFxdGOUSWO3TCs3alH9-YRQezjQIP9C4Sp6AUp_t85OqImD0TF7F-koyNqqD8NjovtAgQOr6eL_KCNpMAeFNU2lAgqUdRIWwCYdMaREsvCtjHPlL5MzCUvO_7eL07IU725xB_ivnhINhFCi2vGOhkT_u_GPa5OmK4v9b1mgH0oa-9A96ngmqRx5utlo3p65OEb15ll35jd1quSATjD01Zzg0BUfDehCGxzKilRXtRmy1wYbQ0JilRRwnyKAevi1NX6aKgOOYUIm0eKILEacIZNOqUu0zwU-GSB33ZNVxI-0-EfzesqHHSsywIw5KN3hEk54vLveKOO7vd8p6sGDrqvsrxKzgeNDpWQcLyEnki1y9cPmKn2swC7Fs-zDt6jCFvq8vXobP7RaOUlY-9aqrj2i3l9ZkVJ6BiS8_ZrUyPhxzS-5cXvSqIcB4i-Z4dzCh9WbOXhk_d5Z9Q7T0cWFsGs4o')
+  },
+  created(){
+      this.$root.$on('title', (event)=>{
+          this.title = event;
+      });
   }
 }
 </script>

@@ -1,6 +1,10 @@
 <template>
     <div class="employee">
-        <h3>Employee</h3>
+        <h3>Employee
+            <v-btn small color="primary" @click="showAddEmployee()">
+                <v-icon>add</v-icon>
+            </v-btn>
+        </h3>
         <v-data-table :headers="headers" :items="employees" hide-actions class="elevation-1">
             <template slot="items" slot-scope="props">
                 <td>{{ props.item.name }}</td>
@@ -8,6 +12,9 @@
                 <td class="text-xs-left">
                     <v-btn small dark fab color="blue" @click="showSalary(props.item.links.salary, props.item.name)">
                         <v-icon>visibility</v-icon>
+                    </v-btn>
+                    <v-btn small dark fab color="red" @click="deleteEmployee(props.item.links.employee)">
+                        <v-icon>close</v-icon>
                     </v-btn>
                 </td>
             </template>
@@ -86,14 +93,22 @@
         <v-dialog v-model="addDialog.status" transition="dialog-bottom-transition">
             <AddTransection :link="worktimeDialog.link" @saveTransection="updateDialog($event)" />
         </v-dialog>
+
+        <v-container>
+            <v-dialog v-model="addEmployeeDialog.status">
+                <AddEmployee @close="addEmployeeDialog.status = false" @save="employeeList()"/>
+            </v-dialog>
+        </v-container>
     </div>
 </template>
 <script>
 import AddTransection from './AddTransection';
+import AddEmployee from './AddEmployee';
     export default{
         name: "Employee",
         components:{
-            AddTransection
+            AddTransection,
+            AddEmployee
         },
         data: ()=>({
                 dialog: {
@@ -164,6 +179,9 @@ import AddTransection from './AddTransection';
                     status: false
 
                 },
+                addEmployeeDialog:{
+                    status: false
+                },
                 headers: [
                     { text: 'ชื่อ', value: 'name' },
                     { text: 'ฐานเงินเดือน', value: 'salary' },
@@ -178,6 +196,16 @@ import AddTransection from './AddTransection';
                 ]
             }),
         methods:{
+            employeeList(){
+                this.$http.get('http://localhost:8000/api/employees').then((data)=>{
+                    let d = JSON.parse(data.bodyText);
+                    this.employees = d.data;
+                });
+                console.log('employee list');
+            },
+            showAddEmployee(){
+                this.addEmployeeDialog.status = true;
+            },
             showSalary(link, name){
                 this.worktimeDialog.link = link;
                 this.$http.get(link).then((data)=>{
@@ -210,18 +238,54 @@ import AddTransection from './AddTransection';
             },
             addTransection(){
                 this.addDialog.status = true;
+            },
+            deleteEmployee(link){
+                this.$http.post(link, {
+                   '_method': "delete" 
+                },{
+                  'Accept': "application/json"  
+                }).then(()=>{
+                    this.employeeList();
+                });
             }
         },
         mounted(){
-            this.$http.get('https://adsence.metold.com/api/employees').then((data)=>{
-                let d = JSON.parse(data.bodyText);
-                this.employees = d.data;
-            });
+            this.employeeList();
+            this.$root.$emit('title', "รายการพนักงาน");
         }
 
 
     }
 </script>
 <style scope>
+.list-animation-enter-active{
+    animation: list-in;
+    animation-duration: 1s;
+}
+.list-animation-leave-active{
+    animation: list-out;
+    animation-duration: 1s;
+}
 
+@keyframes list-in {
+    0%{
+        opacity: 0;
+        height: 0px;
+    }
+    100%{
+        opacity: 1;
+        height: auto;
+    }
+}
+
+@keyframes list-out {
+    0%{
+        opacity: 1;
+        height: auto;
+    }
+    100%{
+        opacity: 0;
+        height: 0px;
+    }
+}
 </style>

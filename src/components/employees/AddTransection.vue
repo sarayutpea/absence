@@ -82,7 +82,9 @@ export default {
             }else{
                 this.form.append('month', this.monthSelection);
             }
-            this.$http.post(this.link, this.form).then((data)=>{
+            this.$http.post(this.link, this.form, {
+                'Accept': "application/json"
+            }).then((data)=>{
                 // console.log(data);
                 this.$emit('saveTransection', data.body.data.links);
             }, response => {

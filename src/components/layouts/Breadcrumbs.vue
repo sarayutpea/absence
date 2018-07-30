@@ -7,13 +7,13 @@
   export default {
     name: "Breadcrumbs",
     props:{
-      title: String
+      title: String,
+      default: ""
     },
     data: ()=> {
       return {
         items: [
           {
-            text: 'Dashboard',
             disabled: false
           }
         ],
