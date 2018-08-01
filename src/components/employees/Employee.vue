@@ -1,8 +1,8 @@
 <template>
     <div class="employee">
-        <h3>Employee
-            <v-btn small color="primary" @click="showAddEmployee()">
-                <v-icon>add</v-icon>
+        <h3>รายการพนักงาน
+            <v-btn small flat color="primary" @click="showAddEmployee()">
+                <v-icon>add</v-icon> เพิ่ม
             </v-btn>
         </h3>
         <v-data-table :headers="headers" :items="employees" hide-actions class="elevation-1">
@@ -13,20 +13,22 @@
                     <v-btn small dark fab color="blue" @click="showSalary(props.item.links.salary, props.item.name)">
                         <v-icon>visibility</v-icon>
                     </v-btn>
-                    <v-btn small dark fab color="red" @click="deleteEmployee(props.item.links.employee)">
+                    <v-btn small dark fab color="primary" @click="editDialog.status = true, 
+                                                                  editDialog.link = props.item.links.employee,
+                                                                  editDialog.name = props.item.name,
+                                                                  editDialog.salary = props.item.salary">
+                        <v-icon>
+                            edit
+                        </v-icon>
+                    </v-btn>
+                    <v-btn small dark fab color="red" @click="deleteConfirm.status = true, deleteConfirm.link = props.item.links.employee, deleteConfirm.name = props.item.name">
                         <v-icon>close</v-icon>
                     </v-btn>
                 </td>
             </template>
         </v-data-table>
 
-        <v-dialog
-            v-model="dialog.status"
-            fullscreen
-            hide-overlay
-            transition="dialog-bottom-transition"
-            scrollable
-        >
+        <v-dialog v-model="dialog.status" fullscreen hide-overlay transition="dialog-bottom-transition" scrollable>
             <v-card tile>
                 <v-toolbar card dark color="primary">
                     <v-btn icon dark @click.native="closeDialog()">
@@ -35,10 +37,8 @@
                     <v-toolbar-title>{{ dialog.title }} - รายเดือน</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-toolbar-items>
-                        <v-btn dark flat @click.native="addTransection()">+ ADD</v-btn>
+                        <v-btn dark flat @click.native="addTransection()">+ เพิ่ม</v-btn>
                     </v-toolbar-items>  
-                    
-                    </v-menu>
                 </v-toolbar>
                 <v-card-text>
                     <v-list>
@@ -94,21 +94,57 @@
             <AddTransection :link="worktimeDialog.link" @saveTransection="updateDialog($event)" />
         </v-dialog>
 
-        <v-container>
-            <v-dialog v-model="addEmployeeDialog.status">
-                <AddEmployee @close="addEmployeeDialog.status = false" @save="employeeList()"/>
-            </v-dialog>
-        </v-container>
+        <v-dialog v-model="addEmployeeDialog.status" max-width="500">
+            <AddEmployee @close="addEmployeeDialog.status = false" @save="employeeList()"/>
+        </v-dialog>
+        <v-dialog v-model="editDialog.status" max-width="500">
+            <EditEmployee :show="editDialog.status" :link="editDialog.link"
+                          :name="editDialog.name"
+                          :salary="editDialog.salary"
+                          @close="editDialog.status = false, employeeList()"/>
+        </v-dialog>
+
+        <v-dialog v-model="deleteConfirm.status" max-width="500">
+            <v-card>
+                <v-card-title class="headline">ลบพนักงาน</v-card-title>
+
+                <v-card-text>
+                    ต้องการลบพนักงาน {{ deleteConfirm.name }} หรือไม่
+                </v-card-text>
+
+                <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn
+                    color="green darken-1"
+                    flat="flat"
+                    @click="deleteConfirm.status = false"
+                >
+                    ยกเลิก
+                </v-btn>
+
+                <v-btn
+                    color="green darken-1"
+                    flat="flat"
+                    @click="deleteEmployee(deleteConfirm.link)"
+                >
+                    ยืนยัน
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <script>
 import AddTransection from './AddTransection';
 import AddEmployee from './AddEmployee';
+import EditEmployee from './EditEmployee';
     export default{
         name: "Employee",
         components:{
             AddTransection,
-            AddEmployee
+            AddEmployee,
+            EditEmployee
         },
         data: ()=>({
                 dialog: {
@@ -182,6 +218,17 @@ import AddEmployee from './AddEmployee';
                 addEmployeeDialog:{
                     status: false
                 },
+                deleteConfirm:{
+                  status: false,
+                  links: "",
+                  name: ""
+                },
+                editDialog:{
+                    status: false,
+                    name: "",
+                    salary: 0,
+                    links: ""
+                },
                 headers: [
                     { text: 'ชื่อ', value: 'name' },
                     { text: 'ฐานเงินเดือน', value: 'salary' },
@@ -201,7 +248,6 @@ import AddEmployee from './AddEmployee';
                     let d = JSON.parse(data.bodyText);
                     this.employees = d.data;
                 });
-                console.log('employee list');
             },
             showAddEmployee(){
                 this.addEmployeeDialog.status = true;
@@ -246,7 +292,8 @@ import AddEmployee from './AddEmployee';
                   'Accept': "application/json"  
                 }).then(()=>{
                     this.employeeList();
-                });
+                    this.deleteConfirm.status = false;
+                })
             }
         },
         mounted(){

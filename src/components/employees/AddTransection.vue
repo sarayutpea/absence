@@ -3,7 +3,7 @@
         <v-card tile>
             <v-toolbar card dark color="primary">
                 <v-toolbar-items>
-                    <v-btn flat @click="save">SAVE</v-btn>
+                    <v-btn flat @click="save">บันทึก</v-btn>
                 </v-toolbar-items>
             </v-toolbar>
             <v-card-text>
@@ -47,7 +47,7 @@ export default {
         file:{
             value: [],
             accept: ".csv",
-            label: "Please choose...",
+            label: "กรุณาเลือกไฟล์ .csv",
             required: false,
             disabled: false,
             multiple: false,
@@ -82,14 +82,17 @@ export default {
             }else{
                 this.form.append('month', this.monthSelection);
             }
-            this.$http.post(this.link, this.form, {
-                'Accept': "application/json"
-            }).then((data)=>{
-                // console.log(data);
-                this.$emit('saveTransection', data.body.data.links);
-            }, response => {
-                console.log(response)
-            })
+
+            if(this.form.get('month') !== null && this.form.get('file') !== null){
+                this.$http.post(this.link, this.form, {
+                    'Accept': "application/json"
+                }).then((data)=>{
+                    this.$emit('saveTransection', data.body.data.links);
+                });
+            }else{
+                console.log("ไม่มีไฟล์ หรือ ไม่ได้เลือกเดือน");
+            }
+            
         },
         getFormData(files){
             const data = new FormData();
