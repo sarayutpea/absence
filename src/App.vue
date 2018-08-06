@@ -18,9 +18,13 @@
                                 <v-icon>{{ child.icon }}</v-icon>
                             </v-list-tile-action>
                             <v-list-tile-content>
-                                <v-list-tile-title>
-                                {{ child.text }}
+                                <v-list-tile-title v-if="child.logout" @click="logout">
+                                    {{ child.text }}
                                 </v-list-tile-title>
+                                <v-list-tile-title v-else>
+                                    {{ child.text }}
+                                </v-list-tile-title>
+                                
                             </v-list-tile-content>
                         </v-list-tile>
                     </v-list-group>
@@ -64,6 +68,22 @@
                 
             </v-container>
         </v-content>
+        <v-dialog dark persistent  v-model="loginDialog.status"  max-width="500">
+            <v-card>
+                <v-card-title>
+                    ลงชื่อเข้าใช้
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field label="อีเมล์" v-model="loginDialog.username" required></v-text-field>
+                    <v-text-field label="รหัสผ่าน" type="password" v-model="loginDialog.password" required></v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="primary" @click="login">
+                        ยืนยัน
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-app>
 
 
@@ -83,47 +103,66 @@ export default {
     dialog: false,
     drawer: null,
     items: [
-      { icon: "computer", text: "Dashboard", link: "/dashboard" },
-      { icon: "account_circle", text: "Employees", link: "/employees" },
-    //   { icon: "content_copy", text: "Duplicates" },
-    //   {
-    //     icon: "keyboard_arrow_up",
-    //     "icon-alt": "keyboard_arrow_down",
-    //     text: "Labels",
-    //     model: true,
-    //     children: [{ icon: "add", text: "Create label" }]
-    //   },
+      { icon: "account_circle", text: "พนักงาน", link: "/employees" },
       {
         icon: "keyboard_arrow_up", 
         'icon-alt' : "keyboard_arrow_down",
-        text: "More",
+        text: "อื่นๆ",
         model: false,
         children: [
-          { text: "Logout", link:"#" },
+          { text: "ออกจากระบบ", logout: true },
         ]
       }
-    //   { icon: "settings", text: "Settings" },
-    //   { icon: "chat_bubble", text: "Send feedback" },
-    //   { icon: "help", text: "Help" },
-    //   { icon: "phonelink", text: "App downloads" },
-    //   { icon: "keyboard", text: "Go to the old version" }
     ],
-    breadcrumbs: Breadcrumbs.items
+    breadcrumbs: Breadcrumbs.items,
+    loginDialog: {
+        status: true,
+        username: "",
+        password: "",
+        form: new FormData()
+    }
   }),
   props:{
     source: String,
   },
   methods:{
-    
+    login(){
+        this.loginDialog.form.append('username', this.loginDialog.username);
+        this.loginDialog.form.append('password', this.loginDialog.password);
+        this.loginDialog.form.append('grant_type', "password");
+        this.loginDialog.form.append('client_id', "2");
+        this.loginDialog.form.append('client_secret', "cn93dyRY9WQFACASGUW5d0OnyovnA6ZcYsr0N94X");
+
+        this.$http.post("https://tumabsence.crispyrices.com/oauth/token", this.loginDialog.form,{
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        }).then((data)=>{
+            sessionStorage.setItem('auth', data.body.token_type+" "+data.body.access_token);
+            this.loginDialog.status = false;
+            this.loginDialog.password = null;
+            this.$root.$emit('auth', true);
+            window.href = "/employees";
+        }).catch((error)=>{
+
+        });
+
+    },
+    logout(){
+        sessionStorage.removeItem('auth');
+        this.loginDialog.status = true;
+    }
   },
   mounted(){
       
-      localStorage.setItem('auth','Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijc3MGQyNjhmMTFlNjBlNzAxYTY5Mzg2MjFlMDJiYzllYTllNmY1ODg5MGMzOWFhNDgwODZiNzVkNmExZTkxNzlhMjY0OTFjMTg1OTUxMGU4In0.eyJhdWQiOiIyIiwianRpIjoiNzcwZDI2OGYxMWU2MGU3MDFhNjkzODYyMWUwMmJjOWVhOWU2ZjU4ODkwYzM5YWE0ODA4NmI3NWQ2YTFlOTE3OWEyNjQ5MWMxODU5NTEwZTgiLCJpYXQiOjE1MzE5ODMxOTIsIm5iZiI6MTUzMTk4MzE5MiwiZXhwIjoxNTYzNTE5MTkyLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.KX09-bfrKMTlcoybDpQXJa-u37-QLUBYuarPZxjapLf_sbx7PmL418seRlcyNmrgKLbqzjpsQV80EDfZzQBupwpW3fbMVGEexmU7PSha6kWOYFPCNlPEBhH3wWCGYDsbVRXFtOPb5inKTj05LtyQ0CmJtQZQs9dXyQcelsGlaJuuuBjtN69Mf_NESN2Ell4Z7FLHfxcnqMqM3oEqRtCDFxdGOUSWO3TCs3alH9-YRQezjQIP9C4Sp6AUp_t85OqImD0TF7F-koyNqqD8NjovtAgQOr6eL_KCNpMAeFNU2lAgqUdRIWwCYdMaREsvCtjHPlL5MzCUvO_7eL07IU725xB_ivnhINhFCi2vGOhkT_u_GPa5OmK4v9b1mgH0oa-9A96ngmqRx5utlo3p65OEb15ll35jd1quSATjD01Zzg0BUfDehCGxzKilRXtRmy1wYbQ0JilRRwnyKAevi1NX6aKgOOYUIm0eKILEacIZNOqUu0zwU-GSB33ZNVxI-0-EfzesqHHSsywIw5KN3hEk54vLveKOO7vd8p6sGDrqvsrxKzgeNDpWQcLyEnki1y9cPmKn2swC7Fs-zDt6jCFvq8vXobP7RaOUlY-9aqrj2i3l9ZkVJ6BiS8_ZrUyPhxzS-5cXvSqIcB4i-Z4dzCh9WbOXhk_d5Z9Q7T0cWFsGs4o')
   },
   created(){
       this.$root.$on('title', (event)=>{
           this.title = event;
       });
+
+      if(sessionStorage.getItem('auth') != null){
+          this.loginDialog.status = false;
+      }
   }
 }
 </script>

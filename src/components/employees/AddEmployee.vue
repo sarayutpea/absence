@@ -26,26 +26,34 @@
 <script>
 export default {
   name: "AddEmployee",
+  props: {
+      link: {
+          type: String,
+          default: ""
+      }
+  },
   data: ()=>({
       fullname: "",
-      salary: 0
+      salary: 0,
+      form: new FormData()
   }),
   methods:{
       close(){
           this.$emit('close', 'close');
       },
       save(){
-          this.$http.post('http://localhost:8000/api/employees',{
-              name: this.fullname,
-              salary: this.salary
-          }).then(()=>{
+          this.form.append('name', this.fullname);
+          this.form.append('salary', this.salary);
+          this.$http.post(this.link, this.form).then((data)=>{
             this.$emit('save', 'save');
             this.$emit('close', 'close');
+          }).catch(e => {
+                console.log(e);
           });
-          
       }
   },
   mounted(){
+
   }
 }
 </script>

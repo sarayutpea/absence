@@ -95,7 +95,7 @@
         </v-dialog>
 
         <v-dialog v-model="addEmployeeDialog.status" max-width="500">
-            <AddEmployee @close="addEmployeeDialog.status = false" @save="employeeList()"/>
+            <AddEmployee :link="employeeUrl" @close="addEmployeeDialog.status = false" @save="employeeList()"/>
         </v-dialog>
         <v-dialog v-model="editDialog.status" max-width="500">
             <EditEmployee :show="editDialog.status" :link="editDialog.link"
@@ -147,6 +147,7 @@ import EditEmployee from './EditEmployee';
             EditEmployee
         },
         data: ()=>({
+                employeeUrl: "https://tumabsence.crispyrices.com/api/employees",
                 dialog: {
                     status: false,
                     title: "Salaries",
@@ -221,7 +222,8 @@ import EditEmployee from './EditEmployee';
                 deleteConfirm:{
                   status: false,
                   links: "",
-                  name: ""
+                  name: "",
+                  form: new FormData()
                 },
                 editDialog:{
                     status: false,
@@ -244,7 +246,13 @@ import EditEmployee from './EditEmployee';
             }),
         methods:{
             employeeList(){
-                this.$http.get('http://localhost:8000/api/employees').then((data)=>{
+                console.log(sessionStorage.getItem('auth'));
+                this.$http.get(this.employeeUrl,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': sessionStorage.getItem('auth')
+                    }
+                }).then((data)=>{
                     let d = JSON.parse(data.bodyText);
                     this.employees = d.data;
                 });
@@ -278,7 +286,6 @@ import EditEmployee from './EditEmployee';
                 this.dialog.dataTable.months = [];
             },
             updateDialog($event){
-                // console.log($event);
                 this.showSalary($event, this.dialog.title);
                 this.addDialog.status = false;
             },
@@ -286,11 +293,8 @@ import EditEmployee from './EditEmployee';
                 this.addDialog.status = true;
             },
             deleteEmployee(link){
-                this.$http.post(link, {
-                   '_method': "delete" 
-                },{
-                  'Accept': "application/json"  
-                }).then(()=>{
+                this.deleteConfirm.form.append('_method', "delete");
+                this.$http.post(link, this.deleteConfirm.form).then((data)=>{
                     this.employeeList();
                     this.deleteConfirm.status = false;
                 })
@@ -299,6 +303,9 @@ import EditEmployee from './EditEmployee';
         mounted(){
             this.employeeList();
             this.$root.$emit('title', "รายการพนักงาน");
+            this.$root.$on('auth', (event)=>{
+                this.employeeList();
+            });
         }
 
 

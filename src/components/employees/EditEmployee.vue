@@ -30,20 +30,16 @@ export default {
     props: ['link', 'salary', 'name'],
     data: ()=>({
         newSalary: 0,
-        newName: "Name"
+        newName: "Name",
+        form: new FormData()
     }),
     methods:{
         save(){
+            this.form.append('name', this.newName);
+            this.form.append('salary', this.newSalary);
+            this.form.append('_method', "put");
             console.log(this.link);
-            this.$http.post(this.link,{
-                name: this.newName,
-                salary: this.newSalary,
-                '_method': "put"
-            },
-            {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }).then((data)=>{
+            this.$http.post(this.link,this.form).then((data)=>{
                 this.$emit('close');
             });
             

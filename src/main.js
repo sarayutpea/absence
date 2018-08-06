@@ -7,8 +7,6 @@ import VueResource from 'vue-resource'
 // import { createSimpleTransition } from 'vuetify/es5/util/helpers'
 
 
-import Dashboard from './components/DashBoard'
-import Login from './components/auth/Login'
 import Employee from './components/employees/Employee'
 
 
@@ -20,8 +18,6 @@ Vue.config.productionTip = false
 // Vue.component(Dashboard, myTransition)
 
 const routes = [
-  { path: '/dashboard', component: Dashboard },
-  { path: '/login', component: Login },
   { path: '/employees', component: Employee }
 ]
 const router = new VueRouter({
