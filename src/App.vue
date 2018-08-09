@@ -120,7 +120,9 @@ export default {
         username: "",
         password: "",
         form: new FormData()
-    }
+    },
+    // url: "http://localhost:8000/oauth/token",
+    url: "https://tumabsence.crispyrices.com/oauth/token"
   }),
   props:{
     source: String,
@@ -133,15 +135,12 @@ export default {
         this.loginDialog.form.append('client_id', "2");
         this.loginDialog.form.append('client_secret', "cn93dyRY9WQFACASGUW5d0OnyovnA6ZcYsr0N94X");
 
-        this.$http.post("https://tumabsence.crispyrices.com/oauth/token", this.loginDialog.form,{
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        }).then((data)=>{
-            sessionStorage.setItem('auth', data.body.token_type+" "+data.body.access_token);
+        this.$http.post(this.url, this.loginDialog.form).then((data)=>{
+            sessionStorage.setItem('auth', data.data.token_type+" "+data.data.access_token);
             this.loginDialog.status = false;
             this.loginDialog.password = null;
             this.$root.$emit('auth', true);
-            window.href = "/employees";
+            windows.href = "/employees";
         }).catch((error)=>{
 
         });

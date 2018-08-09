@@ -38,7 +38,6 @@ export default {
             this.form.append('name', this.newName);
             this.form.append('salary', this.newSalary);
             this.form.append('_method', "put");
-            console.log(this.link);
             this.$http.post(this.link,this.form).then((data)=>{
                 this.$emit('close');
             });

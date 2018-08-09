@@ -246,31 +246,28 @@ import EditEmployee from './EditEmployee';
             }),
         methods:{
             employeeList(){
-                console.log(sessionStorage.getItem('auth'));
-                this.$http.get(this.employeeUrl,{
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': sessionStorage.getItem('auth')
-                    }
-                }).then((data)=>{
-                    let d = JSON.parse(data.bodyText);
+                 this.$http.get(this.employeeUrl).then((response)=>{
+                    let d = response.data;
                     this.employees = d.data;
+                }).catch((error)=>{
+                    console.log(error);
                 });
+                
             },
             showAddEmployee(){
                 this.addEmployeeDialog.status = true;
             },
             showSalary(link, name){
                 this.worktimeDialog.link = link;
-                this.$http.get(link).then((data)=>{
-                    this.dialog.dataTable.months = JSON.parse(data.bodyText).data;
+                this.$http.get(link).then((response)=>{
+                    this.dialog.dataTable.months = response.data.data;
                     this.dialog.title = name;
                 });
                 this.dialog.status = true;
             },
             showWorktimes(link, name){
-                this.$http.get(link).then((data)=>{
-                    let d = JSON.parse(data.bodyText);
+                this.$http.get(link).then((response)=>{
+                    let d = response.data;
                     this.worktimeDialog.dataTable.days = d.data;
                     this.worktimeDialog.title = name;
                 });

@@ -84,10 +84,8 @@ export default {
             }
 
             if(this.form.get('month') !== null && this.form.get('file') !== null){
-                this.$http.post(this.link, this.form, {
-                    'Accept': "application/json"
-                }).then((data)=>{
-                    this.$emit('saveTransection', data.body.data.links);
+                this.$http.post(this.link, this.form).then((response)=>{
+                    this.$emit('saveTransection', response.data.data.links);
                 });
             }else{
                 console.log("ไม่มีไฟล์ หรือ ไม่ได้เลือกเดือน");

@@ -44,7 +44,7 @@ export default {
       save(){
           this.form.append('name', this.fullname);
           this.form.append('salary', this.salary);
-          this.$http.post(this.link, this.form).then((data)=>{
+          this.$http.post(this.link, this.form).then((response)=>{
             this.$emit('save', 'save');
             this.$emit('close', 'close');
           }).catch(e => {
