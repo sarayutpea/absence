@@ -246,7 +246,12 @@ import EditEmployee from './EditEmployee';
             }),
         methods:{
             employeeList(){
-                 this.$http.get(this.employeeUrl).then((response)=>{
+                 this.$http.get(this.employeeUrl, {
+                     headers:{
+                        // 'Authorization': sessionStorage.getItem('auth'),
+                        'Accept':"application/json, text/plain, */*"
+                     }
+                 }).then((response)=>{
                     let d = response.data;
                     this.employees = d.data;
                 }).catch((error)=>{
